@@ -1,20 +1,57 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 
 class CommentInput extends Component {
-  constructor(){
-   super()
+  static propTypes = {
+    username: PropTypes.string,
+    onSubmit: PropTypes.func,
+    onUserNameInputBlur: PropTypes.func
+  }
+
+  static defaultProps = {
+    username: ''
+  }
+
+  constructor(props){
+   super(props)
    this.state = {
-     username: '',
+     username: props.username, // 从props 上取 username 字段
      content: ''
    }
   }
 
-  componentWillMount(){
-    this._loadUsername()
-  }
-
   componentDidMount() {
     this.textarea.focus()
+  }
+  
+
+  handleUsernameBlur(event){
+    if (this.props.onUserNameInputBlur) {
+      this.props.onUserNameInputBlur(event.target.value)
+    }
+  }
+
+  handleUsernameChange(event){
+    this.setState({
+      username: event.target.value
+    })
+  }
+
+  handleContentChange (event) {
+    this.setState({
+      content: event.target.value
+    })
+  }
+
+  handleSubmit(){
+    if(this.props.onSubmit) {
+      this.props.onSubmit({
+        username: this.state.username,
+        content: this.state.content,
+        createdTime: +new Date()
+      })
+    }
+    this.setState({content: ''})
   }
 
   render(){
@@ -42,38 +79,6 @@ class CommentInput extends Component {
         </div>
       </div>
     )
-  }
-  handleUsernameChange(event){
-    this.setState({
-      username: event.target.value
-    })
-  }
-  handleContentChange (event) {
-    this.setState({
-      content: event.target.value
-    })
-  }
-  handleSubmit(){
-    if(this.props.onSubmit) {
-      const {username, content} = this.state
-      this.props.onSubmit({username, content, createdTime: +new Date()})
-    }
-    this.setState({content: ''})
-  }
-
-  handleUsernameBlur(event){
-    this._saveUsername(event.target.value)
-  }
-
-  _loadUsername(){
-    const username = localStorage.getItem('username')
-    if (username) {
-      this.setState({username})
-    }
-  }
-
-  _saveUsername(username) {
-    localStorage.setItem('username', username)
   }
 }
 

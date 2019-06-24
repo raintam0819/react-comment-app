@@ -3,10 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 // import App from './App';
 import * as serviceWorker from './serviceWorker';
-import CommentApp from './CommentApp'
-import ClockIndex from './life-cycle/index'
+// import CommentApp from './containers/CommentApp'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import CommentApp from './containers/CommentApp'
+import commentsReducer from './reducers/comments'
 
-ReactDOM.render(<CommentApp />, document.getElementById('root'));
+const store = createStore(commentsReducer)
+
+ReactDOM.render(
+  <Provider store={store}>
+    <CommentApp />
+  </Provider>,
+  document.getElementById('root'));
 
 // ReactDOM.render(<ClockIndex />, document.getElementById('root'));
 
